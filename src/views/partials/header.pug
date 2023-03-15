@@ -1,0 +1,22 @@
+header
+	a(href="/").header__logo
+		i.fab.fa-youtube
+		span MeTube
+	nav
+		form.search__form
+			input(placeholder="검색" name="keyword" type="text")
+			button
+				i.fas.fa-search
+
+		if loggedIn
+			a(href="/videos/upload").upload__btn 업로드
+			a(href="/users/edit").edit__btn 프로필
+			a(href="/users/logout").logout__btn  로그아웃
+			a(href=`/users/${loggedInUser._id}`).avatar
+				if !loggedInUser.avatarUrl
+					i.fa.fa-solid.fa-image.fa-2x
+				else
+					img.header__avatar(src=loggedInUser.avatarUrl)
+		else
+			a(href="/login").login__btn 로그인
+

@@ -1,0 +1,116 @@
+------------Ubuntu update
+sudo apt update
+
+------------curl 설치
+sudo apt-get install curl
+
+------------NVM 설치  ( https://github.com/nvm-sh/nvm 에서 최신버전 받기 )
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+
+source ~/.zshrc
+
+------------nodejs 설치
+nvm install --lts
+
+------------npm update
+npm install -g npm@latest
+
+------------npm or nvm 문제 있을 때
+sudo rm /etc/resolv.conf
+sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+sudo bash -c 'echo "[network]" > /etc/wsl.conf'
+sudo bash -c 'echo "generateResolvConf = false" >> /etc/wsl.conf'
+sudo chattr +i /etc/resolv.conf
+
+
+------------node module 설치
+npm install
+touch babel.config.json 한 후 파일에
+require("@babel/core").transform("code", {
+  presets: ["@babel/preset-env"],
+}); 
+붙혀넣기
+
+
+------------babel 설치 ( https://babeljs.io/setup#installation )
+npm install @babel/core @babel/node --save-dev
+touch babel.config.json 한 후 파일에
+require("@babel/core").transform("code", {
+  presets: ["@babel/preset-env"],
+}); 
+붙혀넣기
+
+------------nodemon 설치
+npm install @babel/core @babel/node --save-dev
+npm install @babel/preset-env --save-dev
+npm install nodemon --save-dev
+//package.json의 scripts를 적절히 고치자 ex) nodemon --exec babel-node server.js
+
+
+
+
+------------mongodb 설치 (WSL) ( https://docs.microsoft.com/ko-kr/windows/wsl/tutorials/wsl-database#install-mongodb )
+
+cd ~
+sudo apt update
+wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+sudo mkdir -p /data/db
+sudo mongod
+위에께 안되면
+sudo mongod --dbpath ~/data/db 
+
+mongodb을 실행할때
+1. sudo mongod
+다른 terminal 띄우고
+2. mongo
+
+mongodb://127.0.0.1:27017 에서 mongodb서버가 실행중이다
+
+connection 오류 날 때
+
+brew services start mongodb-community
+
+------------mongodb 설치 (UBUNTU 22.04) ( https://velog.io/@seungsang00/Ubuntu-MongoDB-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-Ubuntu-20.04 )
+
+ubuntu 22.04는 libssl1.1을 지원하지 않아서 이것을 먼저 설치 후 mongodb를 설치해야 한다
+
+echo "deb http://security.ubuntu.com/ubuntu impish-security main" | sudo tee /etc/apt/sources.list.d/impish-security.list
+sudo apt-get update
+sudo apt-get install libssl1.1
+
+그 다음 mongodb설치
+
+wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+sudo systemctl start mongod
+sudo mkdir -p /data/db
+sudo mongod
+
+
+-------------windows mongodb
+mongodb설치 후 환경변수에 등록
+mongodb 실행
+
+mongod --dbpath C:\Users\oh382\Data\wetube
+mongo
+
+------------- npm package 설치
+
+npm i mongoose
+npm i express
+npm i @babel/core @babel/node --save-dev
+npm i @babel/preset-env --save-dev
+npm i nodemon --save-dev
+
+npm i pug
+npm i bcrypt
+npm i express-session
+npm i connect-mongo
+npm i dotenv
+npm i node-fetch@2.6.1
+

@@ -1,0 +1,53 @@
+extends base
+
+block content
+	div#videoContainer(data-id=video._id tabindex='-1')
+		video(src=video.fileUrl)
+		div#controls.controls
+			div.videoControls__play
+				span#play.videoControls__playBtn
+					i.fas.fa-play
+				div.videoControls__time
+					span#currentTime
+					span  /  
+					span#totalTime
+			input(type='range' min='0' value='0' step='0.1')#timeline.videoControls__timeline
+			div.videoControls__volume
+				input(type='range' min='0' max='1' value='0.5' step='0.05')#volume
+				span#mute
+					i.fas.fa-volume-up
+			div
+				span#fullScreen
+					i.fas.fa-expand
+
+	div.video__data
+		p.video__title=video.title
+		small.video__owner Uploaded by 
+			a(href=`/users/${video.owner._id}`)=video.owner.username
+		br
+		small.video__createdAt=new Date(video.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})
+		br
+		if String(video.owner._id) === String(loggedInUser._id)
+			a(href=`${video.id}/edit`)
+				button Edit Video
+			br
+			a(href=`${video.id}/delete`)
+				button Delete Video
+	if loggedIn
+		div.video__add-comments
+			form.video__comment-form#commentForm
+				textarea(cols="50" rows="3" placeholder="눌러서 댓글을 작성하세요." required)
+				input(type='submit' value="댓글")
+	div.video__comments
+		ul 
+			each comment in video.comments.reverse()
+				li.video__comment(data-id=comment.id)
+					i.fas.fa-comment
+					span=comment.text
+					if String(comment.owner._id) === String(loggedInUser._id)
+						span(class='del') ❌
+
+block scripts
+	script(src='/static/js/videoPlayer.js')
+	if loggedIn
+		script(src='/static/js/commentSection.js')
