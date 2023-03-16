@@ -3,7 +3,7 @@ extends base
 
 block content
 	if errorMessage
-		span=errorMessage
+		include message('error', errorMessage)
 	form(method="POST")
 		input(placeholder="이름" name="name" type="text", required)
 		input(placeholder="이메일" name="email" type="email", required)

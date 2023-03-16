@@ -2,21 +2,22 @@ import User from '../models/User';
 import fetch from 'node-fetch';
 import bcrypt from 'bcrypt';
 
-export const getJoin = (req, res) => res.render('join', { pageTitle: 'Join' });
+export const getJoin = (req, res) =>
+  res.render('join', { pageTitle: 'MeTube' });
 export const postJoin = async (req, res) => {
   const { name, username, email, password, password2, location } = req.body;
-  const pageTitle = 'Join';
+  const pageTitle = 'MeTube 계정 만들기';
   if (password !== password2) {
     return res.status(400).render('join', {
       pageTitle,
-      errorMessage: 'Password confirmation does not match.',
+      messages: { error: '비밀번호가 일치하지 않습니다.' },
     });
   }
   const exists = await User.exists({ $or: [{ username }, { email }] });
   if (exists) {
     return res.status(400).render('join', {
       pageTitle,
-      errorMessage: 'This username/email is already taken.',
+      messages: { error: '아이디 혹은 이메일이 이미 사용중입니다.' },
     });
   }
   try {
@@ -30,13 +31,13 @@ export const postJoin = async (req, res) => {
     return res.redirect('/login');
   } catch (error) {
     return res.status(400).render('join', {
-      pageTitle: 'Upload Video',
-      errorMessage: error._message,
+      pageTitle: 'MeTube',
+      messages: { error: error._message },
     });
   }
 };
 export const getLogin = (req, res) =>
-  res.render('login', { pageTitle: 'Login' });
+  res.render('login', { pageTitle: 'MeTube' });
 
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
@@ -45,14 +46,14 @@ export const postLogin = async (req, res) => {
   if (!user) {
     return res.status(400).render('login', {
       pageTitle,
-      errorMessage: 'An account with this username does not exists.',
+      messages: { error: '계정이 존재하지 않습니다.' },
     });
   }
   const ok = await bcrypt.compare(password, user.password);
   if (!ok) {
     return res.status(400).render('login', {
       pageTitle,
-      errorMessage: 'Wrong password',
+      messages: { error: '잘못된 비밀번호입니다.' },
     });
   }
   req.session.loggedIn = true;
@@ -138,7 +139,7 @@ export const logout = (req, res) => {
   return res.redirect('/');
 };
 export const getEdit = (req, res) => {
-  return res.render('edit-profile', { pageTitle: 'Edit Profile' });
+  return res.render('edit-profile', { pageTitle: 'MeTube' });
 };
 export const postEdit = async (req, res) => {
   const {
@@ -169,7 +170,7 @@ export const getChangePassword = (req, res) => {
   if (req.session.user.socialOnly === true) {
     return res.redirect('/');
   }
-  return res.render('users/change-password', { pageTitle: 'Change Password' });
+  return res.render('users/change-password', { pageTitle: '비밀번호 변경' });
 };
 export const postChangePassword = async (req, res) => {
   const {
@@ -182,14 +183,14 @@ export const postChangePassword = async (req, res) => {
   const ok = await bcrypt.compare(oldPassword, user.password);
   if (!ok) {
     return res.status(400).render('users/change-password', {
-      pageTitle: 'Change Password',
-      errorMessage: 'The current password is incorrect',
+      pageTitle: '비밀번호 변경',
+      messages: { error: '기존 비밀번호가 틀립니다.' },
     });
   }
   if (newPassword !== newPasswordConfirmation) {
     return res.status(400).render('users/change-password', {
-      pageTitle: 'Change Password',
-      errorMessage: 'The password does not match the confirmation',
+      pageTitle: '비밀번호 변경',
+      messages: { error: '비밀번호가 일치하지 않습니다.' },
     });
   }
   user.password = newPassword;
@@ -201,10 +202,13 @@ export const see = async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id).populate('videos');
   if (!user) {
-    return res.status(404).render('404', { pageTitle: 'User not found.' });
+    return res.status(404).render('404', { pageTitle: 'MeTube' });
   }
   return res.render('users/profile', {
-    pageTitle: user.name,
+    pageTitle: 'user.name - MeTube',
     user,
   });
 };
+
+// 할일: 한글로 다 고치기
+// 메시지 띄우는 것  적용하기
