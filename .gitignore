@@ -5,5 +5,4 @@
 /assets
 /build
 .dockerignore
-Dockerfile
 fly.toml
