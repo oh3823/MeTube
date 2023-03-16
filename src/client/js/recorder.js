@@ -23,7 +23,7 @@ const downloadFile = (fileUrl, fileName) => {
 const handleDownload = async () => {
   actionBtn.removeEventListener('click', handleDownload);
 
-  actionBtn.innerText = 'Transcoding...';
+  actionBtn.innerText = '변환중...';
 
   actionBtn.disabled = true;
 
@@ -65,19 +65,20 @@ const handleDownload = async () => {
   URL.revokeObjectURL(videoFile);
 
   actionBtn.disabled = false;
-  actionBtn.innerText = 'Record Again';
+  actionBtn.innerText = '다시 녹화하기';
   actionBtn.addEventListener('click', handleStart);
 };
 
 const handleStop = () => {
-  actionBtn.innerText = 'Download Recording';
+  actionBtn.innerText = '다운로드';
   actionBtn.removeEventListener('click', handleStop);
   actionBtn.addEventListener('click', handleDownload);
   recorder.stop();
 };
 
-const handleStart = () => {
-  actionBtn.innerText = 'Stop Recording';
+const handleStart = async () => {
+  await init();
+  actionBtn.innerText = '녹화 중지';
   actionBtn.removeEventListener('click', handleStart);
   actionBtn.addEventListener('click', handleStop);
   recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
@@ -99,7 +100,5 @@ const init = async () => {
   video.srcObject = stream;
   video.play();
 };
-
-init();
 
 actionBtn.addEventListener('click', handleStart);
